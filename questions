@@ -1,0 +1,116 @@
+Got it! Below are some file descriptor-related questions focusing solely on regular file operations and process creation in Linux using C:
+
+### Beginner-Level Questions:
+
+1. Open, Write, and Close a File Using File Descriptors
+   - Write a C program that:
+     1. Opens a file `example.txt` using the `open()` system call.
+     2. Writes a string `"Hello, World!"` to the file.
+     3. Closes the file descriptor after writing.
+   
+2. Check and Handle File Descriptor Errors
+   - Write a C program that:
+     1. Attempts to open a non-existent file.
+     2. Checks whether the file descriptor returned by `open()` is valid or not (i.e., checks for `-1`).
+     3. Prints an appropriate error message if the file cannot be opened.
+
+3. Read from a File Using File Descriptors
+   - Write a C program that:
+     1. Opens an existing file `input.txt` for reading.
+     2. Reads its contents into a buffer and prints it to the standard output.
+     3. Closes the file descriptor after reading.
+
+4. Write to a File Using File Descriptors
+   - Write a C program that:
+     1. Opens a file `output.txt` with write-only mode (`O_WRONLY`).
+     2. Writes a simple message to the file.
+     3. Closes the file descriptor.
+
+5. Use `open()` with `O_CREAT`
+   - Write a program that attempts to open a file called `newfile.txt` using `open()` with the `O_CREAT` flag. If the file doesn’t exist, create it and write some data to it.
+
+---
+
+### Intermediate-Level Questions:
+
+6. Duplicate File Descriptors Using `dup()`
+   - Write a program that:
+     1. Opens a file `file.txt` for reading.
+     2. Duplicates the file descriptor using `dup()` (creates a copy of the original descriptor).
+     3. Reads from the new file descriptor and prints the content to standard output.
+
+7. Redirecting Output to a File Using `dup2()`
+   - Write a C program that:
+     1. Redirects `stdout` to a file `output.txt` using `dup2()`.
+     2. Any `printf()` or other standard output operations should write to `output.txt` instead of the terminal.
+     3. Ensure that you restore `stdout` to its original value at the end.
+
+8. Using `fcntl()` to Get and Set File Descriptor Flags
+   - Write a program that:
+     1. Opens a file `data.txt`.
+     2. Uses `fcntl()` to get the current flags set on the file descriptor.
+     3. Changes the file descriptor flags to non-blocking (`O_NONBLOCK`), then tries to read the file to demonstrate non-blocking behavior.
+   
+9. Process Creation and File Descriptor Inheritance
+   - Write a C program that:
+     1. Creates a child process using `fork()`.
+     2. In the child process, open a file `child.txt`, write some data, and close it.
+     3. In the parent process, after the `fork()`, open a file `parent.txt` and write some data.
+     4. Demonstrate that the file descriptors are inherited by the child process but can be closed independently by both processes.
+
+10. Read and Write in Parent and Child Processes
+    - Write a C program that:
+      1. Creates a child process using `fork()`.
+      2. In the parent process, open `parentfile.txt` for reading, read the contents, and close the file.
+      3. In the child process, open `childfile.txt` for writing, write some data, and close the file.
+
+---
+
+### Advanced-Level Questions:
+
+11. Simulate `cat` Command Using File Descriptors
+   - Write a program that simulates the basic behavior of the `cat` command:
+     1. Opens a file for reading.
+     2. Reads the contents in chunks and prints them to the terminal using a file descriptor.
+     3. If no file is provided as an argument, it should read from standard input.
+
+12. Implement `tail -f` Behavior Using File Descriptors
+   - Write a program that simulates the behavior of `tail -f`:
+     1. Open a file `logfile.txt` for reading.
+     2. Keep the file open and continuously monitor the file for new data, printing any new lines added to the file.
+     3. Use `lseek()` to reposition the file pointer to the end of the file initially.
+
+13. File Locking with `fcntl()`
+   - Write a C program that:
+     1. Opens a file `sharedfile.txt`.
+     2. Uses `fcntl()` to acquire an advisory lock on the file.
+     3. Simulates a process that holds the lock for a few seconds and then releases it.
+     4. Another process (using `fork()`) should attempt to acquire the lock and block until the first process releases the lock.
+
+14. Process Synchronization Using File Descriptors and Pipes
+   - Write a program that:
+     1. Creates a pipe using `pipe()`.
+     2. Uses `fork()` to create a child process.
+     3. The parent process writes data to the pipe.
+     4. The child process reads the data from the pipe and processes it.
+
+15. Create and Manage Multiple File Descriptors in a Process
+   - Write a program that:
+     1. Opens three different files: `file1.txt`, `file2.txt`, and `file3.txt`.
+     2. Reads from `file1.txt`, writes to `file2.txt`, and appends to `file3.txt`.
+     3. Demonstrates proper management of multiple file descriptors and closes them at the end.
+
+---
+
+### Bonus Challenge:
+
+16. Simulate a Simple Text Editor
+   - Write a C program that:
+     1. Allows a user to input text via standard input.
+     2. Saves the text to a file using file descriptors.
+     3. Handles file opening, writing, and closing.
+     4. Includes basic error checking to ensure the file is properly opened, written to, and closed.
+
+---
+
+These questions will give you practice with file descriptors, process creation, and file handling in Linux using C, without requiring socket programming.
