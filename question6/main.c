@@ -8,75 +8,65 @@
 |   Question                                                                                                    |
 |   ========                                                                                                    |
 |														|
-|    1. Open, Write, and Close a File Using File Descriptors							|
-|   - Write a C program that:											|
-|    1. Opens a file `example.txt` using the `open()` system call.						|
-|     2. Writes a string `"Hello, World!"` to the file.								|
-|     3. Closes the file descriptor after writing.								|
+|   Duplicate File Descriptors Using `dup()`									|
+|   - Write a program that:											|
+|     1. Opens a file `file.txt` for reading.									|
+|     2. Duplicates the file descriptor using `dup()` (creates a copy of the original descriptor).		|
+|     3. Reads from the new file descriptor and prints the content to standard output.                          |
+|														|
 +---------------------------------------------------------------------------------------------------------------+
 
 */
 
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <unistd.h>
-#include <string.h>
-
+#include <stdio.h>
 #define BUF_SIZE 50
 
-char msg[]="Enter your message to write \n";
-char buf[BUF_SIZE] = {0};
+int main(int argc, char *argv[]){
 
-int main (int argc, char *argv[])
-{
+	int fd, new_fd;
+	ssize_t read_ret;
+	char buf[BUF_SIZE] = {0};
 
-    int fd;
-    ssize_t write_ret, read_ret;
+	if ((fd = open(argv[1], O_RDWR)) == -1){
+	
+	    goto ERROR_HANDLE;
 
-    if ((fd = open(argv[1], O_RDWR)) == -1){
-
-		perror("file open ");
-		goto exit;
-	    }
-    else if(fd > 0)
-    {
-	perror("open file ");
-
-	if ( (write_ret = write(fd, msg, strlen(msg))) == -1)
-	{
-	    perror("write ");
-	    close(fd);
-	    goto exit;
 	}
-	else if (write_ret > 0)
-	{
-	    perror("write ");
+	else if (fd > 0 ){
 
-	    if( (read_ret = read(fd, buf, BUF_SIZE)) == -1)
-	    {
-		perror("read ");
+	    perror("Open");
+
+	    if ((new_fd = dup(fd)) == -1){
+		goto ERROR_HANDLE;
+	    }
+	    else{
 		close(fd);
-		goto exit;
-
+		perror("Old file discriptor close");
+		
+		if((read_ret = read(new_fd, buf, BUF_SIZE)) == -1)
+		{
+		    close(new_fd);
+		    goto ERROR_HANDLE;
+		}
+		else if(read_ret > 0)
+		{
+		    	printf(" Old file Discriptor : %d\n New file Discriptor : %d\n",fd, new_fd);
+			close(new_fd);
+			perror("close ");
+			printf("Read Data\n %s\n",buf);
+			return 0;
+		}
 	    }
 
-	    else if (read_ret > 0 )
-	    {
-		perror("read ");
-		close (fd);
-		printf("%s",buf);
-	    }
-	    
 	}
 
-    }
-
-exit:
-    return -1;
-
-return 0;
+	return 0;
+ERROR_HANDLE:
+	perror("");
+	return -1;
 }
 
